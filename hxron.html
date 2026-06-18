@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HXRON — AI-Powered Data Center Hosting</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-deep:      #080B12;
+      --bg-panel:     #0E1420;
+      --bg-card:      #131A2A;
+      --cyan:         #00D4FF;
+      --cyan-dim:     #00A3C4;
+      --cyan-glow:    rgba(0, 212, 255, 0.15);
+      --violet:       #8B5CF6;
+      --violet-glow:  rgba(139, 92, 246, 0.15);
+      --white:        #E8EDF5;
+      --muted:        #8892A4;
+      --dim:          #3A4558;
+      --border:       rgba(0, 212, 255, 0.12);
+      --border-v:     rgba(139, 92, 246, 0.18);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg-deep);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    #grid-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 48px;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(6px);
+    }
+    .logo {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: 1.6rem;
+      letter-spacing: 0.18em;
+      color: var(--white);
+    }
+    .logo span { color: var(--cyan); }
+    .logo .ai-tag {
+      font-size: 0.55rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: var(--violet);
+      border: 1px solid var(--violet);
+      padding: 2px 6px;
+      border-radius: 3px;
+      vertical-align: middle;
+      margin-left: 8px;
+      background: var(--violet-glow);
+    }
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--cyan-glow);
+    }
+    .pulse-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .pulse-dot.violet { background: var(--violet); animation: pulse-v 2s ease-in-out infinite; }
+    @keyframes pulse {
+      0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(0,212,255,0.6); }
+      50%      { opacity:0.6; box-shadow:0 0 0 6px rgba(0,212,255,0); }
+    }
+    @keyframes pulse-v {
+      0%,100% { opacity:1; box-shadow:0 0 0 0 rgba(139,92,246,0.6); }
+      50%      { opacity:0.6; box-shadow:0 0 0 6px rgba(139,92,246,0); }
+    }
+
+    /* ── Main ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      gap: 52px;
+    }
+
+    .eyebrow {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      text-align: center;
+    }
+
+    .hero-title {
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: clamp(2.6rem, 7.5vw, 6rem);
+      line-height: 1.0;
+      text-align: center;
+      letter-spacing: 0.04em;
+      color: var(--white);
+    }
+    .hero-title .highlight-cyan {
+      color: var(--cyan);
+      text-shadow: 0 0 40px rgba(0,212,255,0.5);
+    }
+    .hero-title .highlight-violet {
+      color: var(--violet);
+      text-shadow: 0 0 40px rgba(139,92,246,0.5);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      color: var(--muted);
+      text-align: center;
+      max-width: 600px;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .coming-soon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(0.85rem, 2vw, 1.05rem);
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+      padding: 14px 32px;
+      border-radius: 4px;
+      background: var(--cyan-glow);
+      box-shadow: 0 0 30px rgba(0,212,255,0.1), inset 0 0 20px rgba(0,212,255,0.04);
+    }
+
+    /* ── AI Banner ── */
+    .ai-banner {
+      width: 100%;
+      max-width: 900px;
+      background: linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(0,212,255,0.08) 100%);
+      border: 1px solid var(--border-v);
+      border-radius: 12px;
+      padding: 32px 36px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .ai-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 60%, rgba(139,92,246,0.06));
+      pointer-events: none;
+    }
+    .ai-brain {
+      font-size: 2.8rem;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 16px rgba(139,92,246,0.6));
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+    .ai-banner-content { flex: 1; }
+    .ai-banner-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--violet);
+      margin-bottom: 8px;
+    }
+    .ai-banner-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 10px;
+      letter-spacing: 0.04em;
+    }
+    .ai-banner-body {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .ai-stats {
+      display: flex;
+      gap: 24px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+    .ai-stat { text-align: center; }
+    .ai-stat-num {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--violet);
+      display: block;
+      line-height: 1;
+    }
+    .ai-stat-label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* ── Cards ── */
+    .cards {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 960px;
+      width: 100%;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px 24px 24px;
+      flex: 1 1 200px;
+      max-width: 220px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .card.ai-card { border-color: var(--border-v); }
+    .card:hover { border-color: rgba(0,212,255,0.35); transform: translateY(-3px); }
+    .card.ai-card:hover { border-color: rgba(139,92,246,0.45); }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .card.ai-card::before {
+      background: linear-gradient(90deg, transparent, var(--violet), transparent);
+    }
+    .card:hover::before { opacity: 1; }
+    .card-icon { font-size: 1.5rem; margin-bottom: 12px; }
+    .card-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 8px;
+    }
+    .card.ai-card .card-title { color: var(--violet); }
+    .card-body { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── Section divider ── */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      max-width: 960px;
+    }
+    .section-divider span {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .section-divider .line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .cyan-label { color: var(--cyan); }
+    .violet-label { color: var(--violet); }
+
+    /* ── Notify ── */
+    .notify-section { text-align: center; max-width: 480px; width: 100%; }
+    .notify-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+    .notify-form {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--bg-card);
+      transition: border-color 0.3s;
+    }
+    .notify-form:focus-within {
+      border-color: var(--cyan-dim);
+      box-shadow: 0 0 20px rgba(0,212,255,0.1);
+    }
+    .notify-form input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 14px 18px;
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .notify-form input::placeholder { color: var(--dim); }
+    .notify-form button {
+      background: var(--cyan);
+      color: var(--bg-deep);
+      border: none;
+      padding: 14px 22px;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .notify-form button:hover { background: #33DDFF; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-copy { font-size: 0.75rem; color: var(--dim); letter-spacing: 0.05em; }
+    .footer-tagline { font-size: 0.7rem; color: var(--dim); letter-spacing: 0.12em; text-transform: uppercase; }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      header { padding: 20px; }
+      footer  { padding: 20px; }
+      .ai-banner { flex-direction: column; }
+      .ai-stats { justify-content: center; }
+      .card { max-width: 100%; }
+      .notify-form { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pulse-dot, .ai-brain { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="grid-canvas"></canvas>
+
+<div class="wrapper">
+  <header>
+    <div class="logo">HX<span>R</span>ON <span class="ai-tag">AI</span></div>
+    <div class="status-pill">
+      <div class="pulse-dot"></div>
+      Systems Initializing
+    </div>
+  </header>
+
+  <main>
+    <p class="eyebrow">AI-Powered · Next-Generation Data Center Infrastructure</p>
+
+    <div style="text-align:center">
+      <h1 class="hero-title">
+        INTELLIGENT<br>
+        <span class="highlight-cyan">INFRA</span> MEETS<br>
+        <span class="highlight-violet">AI</span>
+      </h1>
+    </div>
+
+    <p class="hero-sub">
+      hxron is building enterprise-grade data center hosting fused with artificial intelligence — predictive scaling, autonomous operations, and AI-optimized compute fabric for the workloads that define tomorrow.
+    </p>
+
+    <div class="coming-soon-badge">
+      <div class="pulse-dot"></div>
+      Coming Soon
+    </div>
+
+    <!-- AI Feature Banner -->
+    <div class="ai-banner">
+      <div class="ai-brain">🧠</div>
+      <div class="ai-banner-content">
+        <div class="ai-banner-label">AI Core — Autonomous Infrastructure</div>
+        <div class="ai-banner-title">Your Data Center, Self-Optimizing</div>
+        <div class="ai-banner-body">
+          hxron's AI engine continuously monitors load patterns, predicts demand spikes, reroutes traffic, and adjusts power allocation — all without human intervention. Less downtime, lower costs, more performance.
+        </div>
+      </div>
+      <div class="ai-stats">
+        <div class="ai-stat">
+          <span class="ai-stat-num">99.99%</span>
+          <span class="ai-stat-label">AI Uptime<br>Target</span>
+        </div>
+        <div class="ai-stat">
+          <span class="ai-stat-num">40%</span>
+          <span class="ai-stat-label">Power<br>Savings</span>
+        </div>
+        <div class="ai-stat">
+          <span class="ai-stat-num">&lt;1ms</span>
+          <span class="ai-stat-label">AI Threat<br>Response</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider: Infrastructure -->
+    <div class="section-divider">
+      <div class="line"></div>
+      <span class="cyan-label">Core Infrastructure</span>
+      <div class="line"></div>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🏢</div>
+        <div class="card-title">Colocation</div>
+        <div class="card-body">Carrier-neutral facilities with redundant power and precision cooling engineered for zero downtime.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">☁️</div>
+        <div class="card-title">Managed Cloud</div>
+        <div class="card-body">Private and hybrid cloud environments tuned for enterprise performance and compliance needs.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔒</div>
+        <div class="card-title">Security</div>
+        <div class="card-body">Multi-layered physical and network security with 24/7 monitoring — always audit-ready.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">High-Density Power</div>
+        <div class="card-body">Up to 30kW per cabinet with N+1 UPS redundancy and clean energy — built for GPU clusters.</div>
+      </div>
+    </div>
+
+    <!-- Divider: AI -->
+    <div class="section-divider">
+      <div class="line"></div>
+      <span class="violet-label">AI Capabilities</span>
+      <div class="line"></div>
+    </div>
+
+    <div class="cards">
+      <div class="card ai-card">
+        <div class="card-icon">📊</div>
+        <div class="card-title">Predictive Scaling</div>
+        <div class="card-body">ML models forecast traffic and auto-provision resources before demand hits, eliminating reactive bottlenecks.</div>
+      </div>
+      <div class="card ai-card">
+        <div class="card-icon">🛡️</div>
+        <div class="card-title">AI Threat Detection</div>
+        <div class="card-body">Real-time anomaly detection across network layers, identifying and isolating intrusions in under a millisecond.</div>
+      </div>
+      <div class="card ai-card">
+        <div class="card-icon">🌡️</div>
+        <div class="card-title">Smart Cooling</div>
+        <div class="card-body">AI-driven thermal management reduces cooling energy usage by up to 40% while maintaining optimal rack temperatures.</div>
+      </div>
+      <div class="card ai-card">
+        <div class="card-icon">🤖</div>
+        <div class="card-title">Autonomous Ops</div>
+        <div class="card-body">Self-healing infrastructure that detects, diagnoses, and resolves common failures automatically — day or night.</div>
+      </div>
+    </div>
+
+
+  </main>
+
+  <footer>
+    <div class="footer-copy">© 2026 hxron. All rights reserved.</div>
+    <div class="footer-tagline">Colocation · Cloud · AI · Connectivity</div>
+  </footer>
+</div>
+
+<script>
+  const canvas = document.getElementById('grid-canvas');
+  const ctx = canvas.getContext('2d');
+  const NODE_COUNT = 60;
+  let nodes = [], W, H;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function initNodes() {
+    nodes = Array.from({ length: NODE_COUNT }, (_, i) => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 1.8 + 0.6,
+      ai: i < 14, // some nodes are "AI" nodes — violet
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 160) {
+          const alpha = (1 - dist / 160) * 0.32;
+          const isAI = nodes[i].ai || nodes[j].ai;
+          ctx.beginPath();
+          ctx.strokeStyle = isAI
+            ? `rgba(139,92,246,${alpha})`
+            : `rgba(0,212,255,${alpha})`;
+          ctx.lineWidth = 0.6;
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    nodes.forEach(n => {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = n.ai ? 'rgba(139,92,246,0.8)' : 'rgba(0,212,255,0.7)';
+      ctx.fill();
+    });
+  }
+
+  function move() {
+    nodes.forEach(n => {
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+    });
+  }
+
+  function loop() { move(); draw(); requestAnimationFrame(loop); }
+
+  window.addEventListener('resize', () => { resize(); initNodes(); });
+  resize(); initNodes(); loop();
+</script>
+</body>
+</html>
