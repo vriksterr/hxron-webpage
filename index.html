@@ -3,46 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HXRON - AI & Cloud Infrastructure</title>
+
+<title>HXRON | AI, Cloud & Infrastructure</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
 }
 
+:root{
+    --bg:#050816;
+    --card:#0e1625;
+    --text:#ffffff;
+    --muted:#9fb0c5;
+    --blue:#3ea6ff;
+    --cyan:#65f0ff;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
 body{
     font-family:'Inter',sans-serif;
-    background:#050816;
-    color:white;
+    background:var(--bg);
+    color:var(--text);
     overflow-x:hidden;
 }
 
-.background{
+/* Animated Aurora */
+
+body::before{
+    content:"";
     position:fixed;
-    inset:0;
+    inset:-50%;
     background:
-    radial-gradient(circle at 20% 20%, rgba(0,122,255,.25), transparent 35%),
-    radial-gradient(circle at 80% 30%, rgba(0,255,200,.15), transparent 35%),
-    radial-gradient(circle at 50% 80%, rgba(102,0,255,.2), transparent 40%);
+        radial-gradient(circle,#3ea6ff33 0%,transparent 30%),
+        radial-gradient(circle,#00ffd033 0%,transparent 30%),
+        radial-gradient(circle,#6f42ff33 0%,transparent 30%);
+    animation:aurora 30s linear infinite;
+    filter:blur(120px);
     z-index:-2;
 }
 
-.grid{
+@keyframes aurora{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+
+/* Grid Overlay */
+
+body::after{
+    content:"";
     position:fixed;
     inset:0;
-    background-image:
-    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background:
+    linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
     background-size:40px 40px;
     z-index:-1;
 }
 
-header{
-    padding:30px 8%;
+.container{
+    width:min(1400px,95%);
+    margin:auto;
+}
+
+/* Navbar */
+
+nav{
+    position:sticky;
+    top:0;
+    z-index:999;
+    backdrop-filter:blur(20px);
+    background:rgba(5,8,22,.75);
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.nav{
+    height:80px;
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -51,234 +95,475 @@ header{
 .logo{
     font-size:32px;
     font-weight:800;
-    letter-spacing:2px;
+    letter-spacing:1px;
+    text-shadow:
+        0 0 10px var(--blue),
+        0 0 30px var(--blue);
 }
 
 .logo span{
-    color:#00d4ff;
+    color:var(--blue);
 }
+
+.launching{
+    color:var(--blue);
+    text-transform:uppercase;
+    font-size:14px;
+    letter-spacing:.1em;
+    font-weight:700;
+}
+
+/* Hero */
 
 .hero{
-    min-height:80vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:0 20px;
+    padding:140px 0;
 }
 
-.hero-content{
-    max-width:1000px;
+.hero-grid{
+    display:grid;
+    grid-template-columns:1.3fr .8fr;
+    gap:60px;
+    align-items:center;
+}
+
+.hero-left{
+    animation:float 6s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-12px);}
 }
 
 .badge{
-    display:inline-block;
-    padding:10px 20px;
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:50px;
-    background:rgba(255,255,255,.05);
-    margin-bottom:30px;
-    color:#8de3ff;
+    display:inline-flex;
+    padding:10px 18px;
+    border-radius:999px;
+    border:1px solid rgba(62,166,255,.35);
+    color:var(--blue);
+    background:rgba(62,166,255,.08);
+    margin-bottom:24px;
 }
 
 h1{
-    font-size:clamp(3rem,7vw,6rem);
-    line-height:1.1;
-    margin-bottom:25px;
-    font-weight:800;
+    font-size:78px;
+    line-height:1;
+    margin-bottom:24px;
 }
 
 .gradient{
-    background:linear-gradient(90deg,#00d4ff,#5d9fff,#7b61ff);
+    background:
+        linear-gradient(
+        90deg,
+        #3ea6ff,
+        #65f0ff,
+        #00ffd0,
+        #3ea6ff
+        );
+    background-size:300% auto;
+    animation:gradientMove 6s linear infinite;
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 }
 
-.subtitle{
-    font-size:1.3rem;
-    color:#b8c1d1;
-    max-width:800px;
-    margin:auto;
-    line-height:1.7;
+@keyframes gradientMove{
+    to{
+        background-position:300% center;
+    }
 }
 
-.coming{
-    margin-top:40px;
-    display:inline-block;
-    padding:16px 40px;
-    border-radius:12px;
-    background:linear-gradient(135deg,#0078ff,#6f42ff);
+.hero p{
+    font-size:20px;
+    color:#b7c4d6;
+    line-height:1.8;
+}
+
+.coming-soon{
+    display:inline-flex;
+    margin-top:32px;
+    padding:16px 30px;
+    border-radius:14px;
+    border:1px solid rgba(62,166,255,.35);
+    background:rgba(62,166,255,.1);
+    color:var(--blue);
     font-weight:700;
-    font-size:1.1rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
 }
 
-.services{
-    padding:80px 8%;
-}
-
-.services h2{
-    text-align:center;
-    margin-bottom:50px;
-    font-size:2.4rem;
-}
-
-.grid-services{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-    gap:25px;
-}
+/* Glass Card */
 
 .card{
     background:rgba(255,255,255,.04);
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:20px;
-    padding:30px;
     backdrop-filter:blur(20px);
-    transition:.3s;
-}
-
-.card:hover{
-    transform:translateY(-8px);
-    border-color:#00d4ff;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:28px;
+    padding:35px;
+    box-shadow:0 10px 40px rgba(0,0,0,.35);
 }
 
 .card h3{
-    margin-bottom:15px;
-    color:#00d4ff;
+    margin-bottom:25px;
 }
+
+.stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.stat h2{
+    font-size:42px;
+    color:var(--cyan);
+}
+
+.stat p{
+    color:var(--muted);
+}
+
+/* Sections */
+
+section{
+    padding:100px 0;
+}
+
+.section-title{
+    text-align:center;
+    font-size:46px;
+    margin-bottom:15px;
+}
+
+.section-sub{
+    text-align:center;
+    max-width:800px;
+    margin:0 auto 60px;
+    color:var(--muted);
+}
+
+/* Services */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:24px;
+}
+
+.service{
+    position:relative;
+    overflow:hidden;
+    background:var(--card);
+    padding:30px;
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,.08);
+    transition:.35s;
+}
+
+.service:hover{
+    transform:translateY(-10px);
+    border-color:var(--blue);
+    box-shadow:0 10px 35px rgba(62,166,255,.2);
+}
+
+.service::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+    linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,.08),
+    transparent);
+    transform:translateX(-150%);
+    transition:.8s;
+}
+
+.service:hover::before{
+    transform:translateX(150%);
+}
+
+.service h3{
+    margin-bottom:10px;
+}
+
+.service p{
+    color:var(--muted);
+    line-height:1.7;
+}
+
+/* Infrastructure Section */
+
+.network{
+    background:#0b1220;
+    border-radius:28px;
+    padding:60px;
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.metrics{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:24px;
+    margin-top:40px;
+}
+
+.metric{
+    background:#101a2b;
+    padding:30px;
+    border-radius:18px;
+    text-align:center;
+    transition:.35s;
+}
+
+.metric:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 30px rgba(62,166,255,.25);
+}
+
+.metric h3{
+    font-size:40px;
+    color:var(--cyan);
+    margin-bottom:10px;
+}
+
+.metric p{
+    color:var(--muted);
+}
+
+/* Footer */
 
 footer{
-    padding:80px 20px;
+    border-top:1px solid rgba(255,255,255,.08);
+    padding:70px 0;
     text-align:center;
-    color:#8b93a7;
 }
 
-footer strong{
-    color:white;
+footer p{
+    color:var(--muted);
+    margin-top:10px;
 }
 
-@keyframes float {
-    0%{transform:translateY(0px);}
-    50%{transform:translateY(-15px);}
-    100%{transform:translateY(0px);}
+/* Mobile */
+
+@media(max-width:1100px){
+
+.hero-grid{
+    grid-template-columns:1fr;
 }
 
-.hero-content{
-    animation:float 8s ease-in-out infinite;
+.grid{
+    grid-template-columns:repeat(2,1fr);
 }
+
+.metrics{
+    grid-template-columns:repeat(2,1fr);
+}
+
+h1{
+    font-size:56px;
+}
+
+}
+
+@media(max-width:700px){
+
+.grid{
+    grid-template-columns:1fr;
+}
+
+.metrics{
+    grid-template-columns:1fr;
+}
+
+h1{
+    font-size:42px;
+}
+
+.hero{
+    padding:100px 0;
+}
+
+}
+
 </style>
 </head>
+
 <body>
 
-<div class="background"></div>
-<div class="grid"></div>
+<nav>
+<div class="container nav">
 
-<header>
-    <div class="logo">HX<span>RON</span></div>
-</header>
+<div class="logo">
+HX<span>RON</span>
+</div>
+
+<div class="launching">
+Launching Soon
+</div>
+
+</div>
+</nav>
 
 <section class="hero">
-    <div class="hero-content">
 
-        <div class="badge">
-            AI • Cloud • Infrastructure • Datacenter
-        </div>
+<div class="container hero-grid">
 
-        <h1>
-            Building The Future Of
-            <span class="gradient">AI & Cloud Infrastructure</span>
-        </h1>
+<div class="hero-left">
 
-        <p class="subtitle">
-            HXRON delivers enterprise-grade AI solutions,
-            cloud infrastructure, hosting, networking,
-            datacenter services and software platforms designed
-            for businesses, developers and innovators worldwide.
-        </p>
+<div class="badge">
+AI • CLOUD • HOSTING • NETWORKING
+</div>
 
-        <div class="coming">
-            Launching Soon
-        </div>
+<h1>
+One Platform For
+<span class="gradient">
+AI, Cloud & Infrastructure
+</span>
+</h1>
 
-    </div>
+<p>
+HXRON is building the next generation of infrastructure services—from AI platforms and cloud computing to VPS, dedicated servers, colocation, networking, domains, email hosting and enterprise software.
+</p>
+
+<div class="coming-soon">
+Coming Soon
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>Platform Overview</h3>
+
+<div class="stats">
+
+<div class="stat">
+<h2>AI</h2>
+<p>Private & Enterprise Models</p>
+</div>
+
+<div class="stat">
+<h2>Cloud</h2>
+<p>VPS • VDS • Dedicated</p>
+</div>
+
+<div class="stat">
+<h2>BGP</h2>
+<p>Networking & Transit</p>
+</div>
+
+<div class="stat">
+<h2>24/7</h2>
+<p>Monitoring & Operations</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 </section>
 
-<section class="services">
+<section>
 
-    <h2>Our Ecosystem</h2>
+<div class="container">
 
-    <div class="grid-services">
+<h2 class="section-title">
+Everything Under One Roof
+</h2>
 
-        <div class="card">
-            <h3>AI Platform</h3>
-            <p>Private AI, inference, automation and enterprise intelligence solutions.</p>
-        </div>
+<p class="section-sub">
+Designed for startups, enterprises, developers and AI companies.
+</p>
 
-        <div class="card">
-            <h3>Cloud Infrastructure</h3>
-            <p>Scalable cloud services built for modern applications.</p>
-        </div>
+<div class="grid">
 
-        <div class="card">
-            <h3>VPS Hosting</h3>
-            <p>High-performance virtual servers with global connectivity.</p>
-        </div>
+<div class="service"><h3>AI Platform</h3><p>Inference, private models and automation services.</p></div>
+<div class="service"><h3>Cloud Infrastructure</h3><p>Scalable compute and storage platforms.</p></div>
+<div class="service"><h3>VPS Hosting</h3><p>Fast virtual servers with dedicated resources.</p></div>
+<div class="service"><h3>VDS Hosting</h3><p>Enterprise virtualization solutions.</p></div>
+<div class="service"><h3>Dedicated Servers</h3><p>Bare metal performance for critical workloads.</p></div>
+<div class="service"><h3>Website Hosting</h3><p>Secure and reliable hosting services.</p></div>
+<div class="service"><h3>Email Hosting</h3><p>Professional business communications.</p></div>
+<div class="service"><h3>Domain Services</h3><p>Registration, DNS and management.</p></div>
+<div class="service"><h3>Colocation</h3><p>Rack space, power and connectivity.</p></div>
+<div class="service"><h3>VPN Services</h3><p>Private networking and secure access.</p></div>
+<div class="service"><h3>Monitoring</h3><p>24/7 observability and alerting.</p></div>
+<div class="service"><h3>Software</h3><p>Custom enterprise software solutions.</p></div>
 
-        <div class="card">
-            <h3>Dedicated Servers</h3>
-            <p>Enterprise-grade bare-metal hosting for critical workloads.</p>
-        </div>
+</div>
 
-        <div class="card">
-            <h3>VDS Solutions</h3>
-            <p>Dedicated resources with virtualization flexibility.</p>
-        </div>
+</div>
 
-        <div class="card">
-            <h3>Website Hosting</h3>
-            <p>Reliable hosting optimized for performance and security.</p>
-        </div>
+</section>
 
-        <div class="card">
-            <h3>Email Hosting</h3>
-            <p>Secure business email infrastructure with advanced protection.</p>
-        </div>
+<section>
 
-        <div class="card">
-            <h3>Domain Services</h3>
-            <p>Domain registration, management and DNS solutions.</p>
-        </div>
+<div class="container">
 
-        <div class="card">
-            <h3>Colocation</h3>
-            <p>Enterprise datacenter space with premium connectivity.</p>
-        </div>
+<div class="network">
 
-        <div class="card">
-            <h3>VPN Network</h3>
-            <p>Secure private networking and remote access services.</p>
-        </div>
+<h2 class="section-title">
+Global Infrastructure Vision
+</h2>
 
-        <div class="card">
-            <h3>Network Engineering</h3>
-            <p>BGP, routing, transit and custom networking solutions.</p>
-        </div>
+<p class="section-sub">
+Building a carrier-grade platform for AI and enterprise workloads.
+</p>
 
-        <div class="card">
-            <h3>Monitoring & Software</h3>
-            <p>Observability, automation and custom software platforms.</p>
-        </div>
+<div class="metrics">
 
-    </div>
+<div class="metric">
+<h3>IPv4</h3>
+<p>Public Addressing</p>
+</div>
+
+<div class="metric">
+<h3>IPv6</h3>
+<p>Native Connectivity</p>
+</div>
+
+<div class="metric">
+<h3>BGP</h3>
+<p>Advanced Networking</p>
+</div>
+
+<div class="metric">
+<h3>AI</h3>
+<p>Infrastructure Automation</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 </section>
 
 <footer>
-    <strong>HXRON</strong><br><br>
-    AI • Datacenter • Cloud • Infrastructure
-    <br><br>
-    © 2026 HXRON. All rights reserved.
+
+<div class="container">
+
+<h2>HXRON</h2>
+
+<p>
+AI • Cloud • Datacenter • Hosting • Networking
+</p>
+
+<p>
+© 2026 HXRON. All Rights Reserved.
+</p>
+
+<p>
+Vrikster Parent Company
+</p>
+
+</div>
+
 </footer>
 
 </body>
 </html>
+```
