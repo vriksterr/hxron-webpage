@@ -1,692 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HXRON — AI-Powered Data Center Infrastructure</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HXRON - AI & Cloud Infrastructure</title>
 
-    :root {
-      --navy:       #0D1B2E;
-      --navy-mid:   #12233B;
-      --navy-card:  #172845;
-      --blue:       #0078D4;
-      --blue-hover: #106EBE;
-      --blue-light: #EFF6FC;
-      --blue-pale:  rgba(0,120,212,0.08);
-      --white:      #FFFFFF;
-      --off-white:  #F3F7FB;
-      --slate:      #E8EEF5;
-      --text-main:  #1B2A3B;
-      --text-sub:   #4A6080;
-      --text-muted: #7A90A8;
-      --border:     #D0DBE8;
-      --border-card:#C4D3E2;
-      --teal:       #00B4D8;
-      --green:      #107C10;
-    }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--white);
-      color: var(--text-main);
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-    /* ─── TOP BAR ─── */
-    .topbar {
-      background: var(--navy);
-      color: rgba(255,255,255,0.7);
-      font-size: 0.72rem;
-      letter-spacing: 0.02em;
-      padding: 8px 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .topbar-left { display: flex; align-items: center; gap: 20px; }
-    .topbar a { color: rgba(255,255,255,0.55); text-decoration: none; }
-    .topbar a:hover { color: #fff; }
-    .topbar-right { display: flex; align-items: center; gap: 6px; }
-    .topbar-dot { width: 6px; height: 6px; border-radius: 50%; background: #3DD68C; }
+body{
+    font-family:'Inter',sans-serif;
+    background:#050816;
+    color:white;
+    overflow-x:hidden;
+}
 
-    /* ─── NAV ─── */
-    nav {
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      padding: 0 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 64px;
-      position: sticky; top: 0; z-index: 100;
-    }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .logo-mark {
-      width: 36px; height: 36px;
-      background: var(--blue);
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .logo-mark svg { width: 20px; height: 20px; fill: white; }
-    .logo-name {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-main);
-      letter-spacing: 0.06em;
-    }
-    .logo-name span { color: var(--blue); }
-    .nav-links { display: flex; align-items: center; gap: 4px; }
-    .nav-links a {
-      font-size: 0.88rem;
-      font-weight: 500;
-      color: var(--text-sub);
-      text-decoration: none;
-      padding: 6px 14px;
-      border-radius: 4px;
-      transition: background 0.15s, color 0.15s;
-    }
-    .nav-links a:hover { background: var(--off-white); color: var(--text-main); }
-    .nav-cta {
-      background: var(--blue);
-      color: white !important;
-      border-radius: 4px;
-    }
-    .nav-cta:hover { background: var(--blue-hover) !important; }
+.background{
+    position:fixed;
+    inset:0;
+    background:
+    radial-gradient(circle at 20% 20%, rgba(0,122,255,.25), transparent 35%),
+    radial-gradient(circle at 80% 30%, rgba(0,255,200,.15), transparent 35%),
+    radial-gradient(circle at 50% 80%, rgba(102,0,255,.2), transparent 40%);
+    z-index:-2;
+}
 
-    /* ─── HERO ─── */
-    .hero {
-      background: linear-gradient(160deg, var(--navy) 0%, #0A1F38 55%, #0D2545 100%);
-      color: white;
-      padding: 100px 60px 90px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::after {
-      content: '';
-      position: absolute;
-      right: -60px; top: -60px;
-      width: 600px; height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,120,212,0.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .hero-inner {
-      max-width: 1120px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      gap: 80px;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0,120,212,0.2);
-      border: 1px solid rgba(0,120,212,0.4);
-      border-radius: 20px;
-      padding: 5px 14px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #60C3FF;
-      margin-bottom: 24px;
-    }
-    .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #60C3FF; }
-    .hero h1 {
-      font-size: clamp(2.2rem, 4vw, 3.6rem);
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin-bottom: 20px;
-      color: white;
-    }
-    .hero h1 em {
-      font-style: normal;
-      color: #60C3FF;
-    }
-    .hero p {
-      font-size: 1.05rem;
-      line-height: 1.75;
-      color: rgba(255,255,255,0.65);
-      margin-bottom: 36px;
-      max-width: 460px;
-      font-weight: 300;
-    }
-    .hero-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-    .btn-primary {
-      background: var(--blue);
-      color: white;
-      border: none;
-      padding: 13px 28px;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      letter-spacing: 0.01em;
-      transition: background 0.15s;
-    }
-    .btn-primary:hover { background: var(--blue-hover); }
-    .btn-ghost {
-      background: transparent;
-      color: white;
-      border: 1px solid rgba(255,255,255,0.3);
-      padding: 12px 28px;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-    }
-    .btn-ghost:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); }
+.grid{
+    position:fixed;
+    inset:0;
+    background-image:
+    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size:40px 40px;
+    z-index:-1;
+}
 
-    /* Hero right — stats card */
-    .hero-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 32px;
-      backdrop-filter: blur(4px);
-    }
-    .hero-card-title {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.45);
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .hstat-num {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: white;
-      line-height: 1;
-      margin-bottom: 6px;
-      letter-spacing: -0.02em;
-    }
-    .hstat-num sup { font-size: 1rem; vertical-align: super; }
-    .hstat-label {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.5);
-      font-weight: 400;
-    }
-    .hstat-accent { color: #60C3FF; }
+header{
+    padding:30px 8%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
 
-    /* ─── COMING SOON ─── */
-    .coming-soon-strip {
-      background: var(--blue);
-      color: white;
-      text-align: center;
-      padding: 18px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-    }
-    .cs-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.6); animation: blink 2.5s ease-in-out infinite; }
-    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
-    .cs-text { font-size: 0.88rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
-    .cs-desc { font-size: 0.85rem; color: rgba(255,255,255,0.75); font-weight: 400; }
+.logo{
+    font-size:32px;
+    font-weight:800;
+    letter-spacing:2px;
+}
 
-    /* ─── MAIN CONTENT ─── */
-    .content { max-width: 1120px; margin: 0 auto; padding: 0 60px; }
+.logo span{
+    color:#00d4ff;
+}
 
-    /* ─── SECTION ─── */
-    .section { padding: 80px 0; }
-    .section + .section { border-top: 1px solid var(--border); }
+.hero{
+    min-height:80vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:0 20px;
+}
 
-    .section-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--blue);
-      margin-bottom: 16px;
-    }
-    .section-label::before { content: ''; display: block; width: 16px; height: 2px; background: var(--blue); border-radius: 1px; }
-    .section-h2 {
-      font-size: clamp(1.6rem, 2.5vw, 2.2rem);
-      font-weight: 700;
-      color: var(--text-main);
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-      margin-bottom: 12px;
-    }
-    .section-sub {
-      font-size: 1rem;
-      color: var(--text-sub);
-      max-width: 520px;
-      line-height: 1.75;
-      margin-bottom: 52px;
-    }
+.hero-content{
+    max-width:1000px;
+}
 
-    /* ─── SERVICE GRID ─── */
-    .service-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .svc {
-      background: var(--white);
-      padding: 32px 28px;
-      transition: background 0.2s;
-      position: relative;
-    }
-    .svc:hover { background: var(--off-white); }
-    .svc-icon {
-      width: 44px; height: 44px;
-      background: var(--blue-light);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 16px;
-    }
-    .svc-icon svg { width: 22px; height: 22px; stroke: var(--blue); fill: none; stroke-width: 1.6; }
-    .svc h3 { font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 10px; }
-    .svc p { font-size: 0.84rem; color: var(--text-sub); line-height: 1.65; }
-    .svc-link {
-      display: inline-flex; align-items: center; gap: 4px;
-      font-size: 0.8rem; font-weight: 600; color: var(--blue);
-      margin-top: 16px; text-decoration: none;
-    }
-    .svc-link svg { width: 14px; height: 14px; stroke: var(--blue); fill: none; stroke-width: 2; }
+.badge{
+    display:inline-block;
+    padding:10px 20px;
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:50px;
+    background:rgba(255,255,255,.05);
+    margin-bottom:30px;
+    color:#8de3ff;
+}
 
-    /* ─── AI FEATURE ─── */
-    .ai-section {
-      background: var(--navy);
-      border-radius: 12px;
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-    .ai-left {
-      padding: 56px 52px;
-      border-right: 1px solid rgba(255,255,255,0.07);
-    }
-    .ai-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(0,120,212,0.18);
-      border: 1px solid rgba(0,120,212,0.35);
-      border-radius: 20px;
-      padding: 5px 14px;
-      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-      color: #60C3FF; margin-bottom: 24px;
-    }
-    .ai-h {
-      font-size: clamp(1.5rem, 2.5vw, 2rem);
-      font-weight: 700;
-      color: white;
-      line-height: 1.2;
-      letter-spacing: -0.02em;
-      margin-bottom: 16px;
-    }
-    .ai-p { font-size: 0.92rem; color: rgba(255,255,255,0.6); line-height: 1.8; }
-    .ai-right {
-      padding: 48px 44px;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .ai-point {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      padding: 22px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-    }
-    .ai-point:last-child { border-bottom: none; }
-    .ai-icon {
-      width: 38px; height: 38px; flex-shrink: 0;
-      background: rgba(0,120,212,0.18);
-      border: 1px solid rgba(0,120,212,0.28);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .ai-icon svg { width: 18px; height: 18px; stroke: #60C3FF; fill: none; stroke-width: 1.6; }
-    .ai-point-title { font-size: 0.88rem; font-weight: 600; color: white; margin-bottom: 5px; }
-    .ai-point-desc { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
+h1{
+    font-size:clamp(3rem,7vw,6rem);
+    line-height:1.1;
+    margin-bottom:25px;
+    font-weight:800;
+}
 
-    /* ─── TRUST STRIP ─── */
-    .trust-strip {
-      background: var(--off-white);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .trust-item {
-      flex: 1; min-width: 180px;
-      padding: 36px 32px;
-      text-align: center;
-      border-right: 1px solid var(--border);
-    }
-    .trust-item:last-child { border-right: none; }
-    .trust-num {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--text-main);
-      letter-spacing: -0.02em;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .trust-num span { color: var(--blue); }
-    .trust-label { font-size: 0.78rem; color: var(--text-sub); font-weight: 500; }
+.gradient{
+    background:linear-gradient(90deg,#00d4ff,#5d9fff,#7b61ff);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
 
-    /* ─── FOOTER ─── */
-    footer {
-      background: var(--navy);
-      color: rgba(255,255,255,0.5);
-    }
-    .footer-top {
-      max-width: 1120px; margin: 0 auto;
-      padding: 56px 60px 40px;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 48px;
-    }
-    .footer-brand-name {
-      font-size: 1.1rem; font-weight: 700;
-      color: white; letter-spacing: 0.08em; margin-bottom: 12px;
-    }
-    .footer-brand-name span { color: #60C3FF; }
-    .footer-tagline { font-size: 0.82rem; line-height: 1.65; color: rgba(255,255,255,0.45); }
-    .footer-col-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 16px; }
-    .footer-col a { display: block; font-size: 0.84rem; color: rgba(255,255,255,0.5); text-decoration: none; margin-bottom: 10px; transition: color 0.15s; }
-    .footer-col a:hover { color: white; }
-    .footer-bottom {
-      border-top: 1px solid rgba(255,255,255,0.07);
-      max-width: 1120px; margin: 0 auto;
-      padding: 20px 60px;
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
-    }
-    .footer-copy { font-size: 0.75rem; color: rgba(255,255,255,0.3); }
-    .footer-links { display: flex; gap: 24px; }
-    .footer-links a { font-size: 0.75rem; color: rgba(255,255,255,0.3); text-decoration: none; }
-    .footer-links a:hover { color: rgba(255,255,255,0.6); }
+.subtitle{
+    font-size:1.3rem;
+    color:#b8c1d1;
+    max-width:800px;
+    margin:auto;
+    line-height:1.7;
+}
 
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 960px) {
-      nav, .topbar, .hero { padding-left: 24px; padding-right: 24px; }
-      .content { padding: 0 24px; }
-      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
-      .hero-card { display: none; }
-      .service-grid { grid-template-columns: repeat(2, 1fr); }
-      .ai-section { grid-template-columns: 1fr; }
-      .ai-left { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); padding: 40px 32px; }
-      .ai-right { padding: 32px 32px; }
-      .footer-top { grid-template-columns: 1fr 1fr; padding: 40px 24px 32px; }
-      .footer-bottom { padding: 20px 24px; }
-      .trust-item { min-width: 140px; }
-    }
-    @media (max-width: 560px) {
-      .service-grid { grid-template-columns: 1fr; }
-      .topbar { display: none; }
-      .nav-links a:not(.nav-cta) { display: none; }
-      .hero h1 { font-size: 2rem; }
-      .footer-top { grid-template-columns: 1fr; }
-    }
-  </style>
+.coming{
+    margin-top:40px;
+    display:inline-block;
+    padding:16px 40px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#0078ff,#6f42ff);
+    font-weight:700;
+    font-size:1.1rem;
+}
+
+.services{
+    padding:80px 8%;
+}
+
+.services h2{
+    text-align:center;
+    margin-bottom:50px;
+    font-size:2.4rem;
+}
+
+.grid-services{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:20px;
+    padding:30px;
+    backdrop-filter:blur(20px);
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    border-color:#00d4ff;
+}
+
+.card h3{
+    margin-bottom:15px;
+    color:#00d4ff;
+}
+
+footer{
+    padding:80px 20px;
+    text-align:center;
+    color:#8b93a7;
+}
+
+footer strong{
+    color:white;
+}
+
+@keyframes float {
+    0%{transform:translateY(0px);}
+    50%{transform:translateY(-15px);}
+    100%{transform:translateY(0px);}
+}
+
+.hero-content{
+    animation:float 8s ease-in-out infinite;
+}
+</style>
 </head>
 <body>
 
-  <!-- TOP BAR -->
-  <div class="topbar">
-    <div class="topbar-left">
-      <span>Enterprise Solutions</span>
-      <span>|</span>
-      <a href="#">Partners</a>
-      <a href="#">Support</a>
-    </div>
-    <div class="topbar-right">
-      <div class="topbar-dot"></div>
-      <span>All systems operational</span>
-    </div>
-  </div>
+<div class="background"></div>
+<div class="grid"></div>
 
-  <!-- NAV -->
-  <nav>
-    <div class="logo">
-      <div class="logo-mark">
-        <svg viewBox="0 0 20 20"><path d="M3 3h6v6H3zm8 0h6v6h-6zm0 8h6v6h-6zM3 11h6v6H3z"/></svg>
-      </div>
-      <span class="logo-name">HX<span>R</span>ON</span>
-    </div>
-    <div class="nav-links">
-      <a href="#">Infrastructure</a>
-      <a href="#">AI Platform</a>
-      <a href="#">Security</a>
-      <a href="#">About</a>
-      <a href="#" class="nav-cta">Get Early Access</a>
-    </div>
-  </nav>
+<header>
+    <div class="logo">HX<span>RON</span></div>
+</header>
 
-  <!-- COMING SOON STRIP -->
-  <div class="coming-soon-strip">
-    <div class="cs-dot"></div>
-    <span class="cs-text">Coming Soon</span>
-    <span class="cs-desc">— We're building the next generation of AI-native data center infrastructure.</span>
-  </div>
+<section class="hero">
+    <div class="hero-content">
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-inner">
-      <div>
-        <div class="hero-badge"><span class="hero-badge-dot"></span>AI-Native Infrastructure</div>
-        <h1>Enterprise Data Centers, <em>Powered by AI</em></h1>
-        <p>hxron delivers sovereign-grade colocation, managed cloud, and autonomous infrastructure — engineered for the performance, density, and compliance demands of global enterprise.</p>
-        <div class="hero-actions">
-          <button class="btn-primary">Request Early Access</button>
-          <button class="btn-ghost">Explore Capabilities</button>
+        <div class="badge">
+            AI • Cloud • Infrastructure • Datacenter
         </div>
-      </div>
-      <div class="hero-card">
-        <div class="hero-card-title">Platform at a Glance</div>
-        <div class="hero-stats">
-          <div>
-            <div class="hstat-num hstat-accent">99.99<sup>%</sup></div>
-            <div class="hstat-label">Uptime SLA</div>
-          </div>
-          <div>
-            <div class="hstat-num">30<sup>kW</sup></div>
-            <div class="hstat-label">Per Cabinet</div>
-          </div>
-          <div>
-            <div class="hstat-num">40<sup>%</sup></div>
-            <div class="hstat-label">Energy Reduction via AI</div>
-          </div>
-          <div>
-            <div class="hstat-num hstat-accent">&lt;1<sup>ms</sup></div>
-            <div class="hstat-label">AI Threat Response</div>
-          </div>
+
+        <h1>
+            Building The Future Of
+            <span class="gradient">AI & Cloud Infrastructure</span>
+        </h1>
+
+        <p class="subtitle">
+            HXRON delivers enterprise-grade AI solutions,
+            cloud infrastructure, hosting, networking,
+            datacenter services and software platforms designed
+            for businesses, developers and innovators worldwide.
+        </p>
+
+        <div class="coming">
+            Launching Soon
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- TRUST STRIP -->
-  <div class="trust-strip">
-    <div class="trust-item">
-      <div class="trust-num">99.99<span>%</span></div>
-      <div class="trust-label">Uptime SLA</div>
     </div>
-    <div class="trust-item">
-      <div class="trust-num">30<span>kW</span></div>
-      <div class="trust-label">Per Cabinet</div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-num">40<span>%</span></div>
-      <div class="trust-label">Energy Reduction</div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-num">&lt;1<span>ms</span></div>
-      <div class="trust-label">AI Threat Response</div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-num">24<span>/7</span></div>
-      <div class="trust-label">NOC Monitoring</div>
-    </div>
-  </div>
+</section>
 
-  <!-- MAIN CONTENT -->
-  <div class="content">
+<section class="services">
 
-    <!-- INFRASTRUCTURE -->
-    <div class="section">
-      <div class="section-label">Core Infrastructure</div>
-      <h2 class="section-h2">Built for density, redundancy,<br>and enterprise scale.</h2>
-      <p class="section-sub">Carrier-neutral facilities engineered with the precision and reliability that global enterprise operations demand.</p>
+    <h2>Our Ecosystem</h2>
 
-      <div class="service-grid">
-        <div class="svc">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="1"/><path d="M8 21h8M12 17v4"/></svg>
-          </div>
-          <h3>Colocation</h3>
-          <p>Carrier-neutral facilities with N+2 redundant power, precision cooling, and biometric physical security.</p>
-          <a class="svc-link" href="#">Learn more <svg viewBox="0 0 14 14"><path d="M1 7h12M7 1l6 6-6 6"/></svg></a>
+    <div class="grid-services">
+
+        <div class="card">
+            <h3>AI Platform</h3>
+            <p>Private AI, inference, automation and enterprise intelligence solutions.</p>
         </div>
-        <div class="svc">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 110-14h9M17 19l3-3-3-3"/></svg>
-          </div>
-          <h3>Managed Cloud</h3>
-          <p>Private and hybrid cloud deployments purpose-built for compliance, performance, and enterprise workloads.</p>
-          <a class="svc-link" href="#">Learn more <svg viewBox="0 0 14 14"><path d="M1 7h12M7 1l6 6-6 6"/></svg></a>
+
+        <div class="card">
+            <h3>Cloud Infrastructure</h3>
+            <p>Scalable cloud services built for modern applications.</p>
         </div>
-        <div class="svc">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <h3>Security & Compliance</h3>
-          <p>Multi-layer physical and network security with continuous monitoring — audit-ready from day one.</p>
-          <a class="svc-link" href="#">Learn more <svg viewBox="0 0 14 14"><path d="M1 7h12M7 1l6 6-6 6"/></svg></a>
+
+        <div class="card">
+            <h3>VPS Hosting</h3>
+            <p>High-performance virtual servers with global connectivity.</p>
         </div>
-        <div class="svc">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          </div>
-          <h3>High-Density Power</h3>
-          <p>Up to 30kW per cabinet with clean energy options — engineered for GPU clusters and AI compute.</p>
-          <a class="svc-link" href="#">Learn more <svg viewBox="0 0 14 14"><path d="M1 7h12M7 1l6 6-6 6"/></svg></a>
+
+        <div class="card">
+            <h3>Dedicated Servers</h3>
+            <p>Enterprise-grade bare-metal hosting for critical workloads.</p>
         </div>
-      </div>
+
+        <div class="card">
+            <h3>VDS Solutions</h3>
+            <p>Dedicated resources with virtualization flexibility.</p>
+        </div>
+
+        <div class="card">
+            <h3>Website Hosting</h3>
+            <p>Reliable hosting optimized for performance and security.</p>
+        </div>
+
+        <div class="card">
+            <h3>Email Hosting</h3>
+            <p>Secure business email infrastructure with advanced protection.</p>
+        </div>
+
+        <div class="card">
+            <h3>Domain Services</h3>
+            <p>Domain registration, management and DNS solutions.</p>
+        </div>
+
+        <div class="card">
+            <h3>Colocation</h3>
+            <p>Enterprise datacenter space with premium connectivity.</p>
+        </div>
+
+        <div class="card">
+            <h3>VPN Network</h3>
+            <p>Secure private networking and remote access services.</p>
+        </div>
+
+        <div class="card">
+            <h3>Network Engineering</h3>
+            <p>BGP, routing, transit and custom networking solutions.</p>
+        </div>
+
+        <div class="card">
+            <h3>Monitoring & Software</h3>
+            <p>Observability, automation and custom software platforms.</p>
+        </div>
+
     </div>
 
-    <!-- AI SECTION -->
-    <div class="section">
-      <div class="section-label">AI Platform</div>
-      <h2 class="section-h2">Infrastructure that thinks,<br>adapts, and heals itself.</h2>
-      <p class="section-sub">hxron's AI layer runs continuously beneath your infrastructure — learning from patterns, predicting failure, and acting before incidents occur.</p>
+</section>
 
-      <div class="ai-section">
-        <div class="ai-left">
-          <div class="ai-badge">AI Core</div>
-          <h3 class="ai-h">Autonomous operations,<br>from day one.</h3>
-          <p class="ai-p">hxron's AI engine continuously monitors load patterns, predicts demand spikes, reroutes traffic, and adjusts power allocation — all without human intervention. The result: lower operational cost, fewer incidents, and infrastructure that compounds in efficiency over time.</p>
-        </div>
-        <div class="ai-right">
-          <div class="ai-point">
-            <div class="ai-icon">
-              <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            </div>
-            <div>
-              <div class="ai-point-title">Predictive Scaling</div>
-              <div class="ai-point-desc">ML models forecast demand and auto-provision resources before bottlenecks occur.</div>
-            </div>
-          </div>
-          <div class="ai-point">
-            <div class="ai-icon">
-              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
-            <div>
-              <div class="ai-point-title">AI Threat Detection</div>
-              <div class="ai-point-desc">Real-time anomaly detection across all network layers, with sub-millisecond isolation.</div>
-            </div>
-          </div>
-          <div class="ai-point">
-            <div class="ai-icon">
-              <svg viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
-            </div>
-            <div>
-              <div class="ai-point-title">Smart Thermal Management</div>
-              <div class="ai-point-desc">AI-driven cooling reduces energy use by up to 40% while holding optimal rack temperatures.</div>
-            </div>
-          </div>
-          <div class="ai-point">
-            <div class="ai-icon">
-              <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            </div>
-            <div>
-              <div class="ai-point-title">Autonomous Remediation</div>
-              <div class="ai-point-desc">Self-healing systems detect, diagnose, and resolve common failures automatically, around the clock.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /content -->
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-top">
-      <div>
-        <div class="footer-brand-name">HX<span>R</span>ON</div>
-        <p class="footer-tagline">Enterprise-grade data center hosting and AI-native managed infrastructure — engineered for the demands of tomorrow's workloads.</p>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Infrastructure</div>
-        <a href="#">Colocation</a>
-        <a href="#">Managed Cloud</a>
-        <a href="#">High-Density Power</a>
-        <a href="#">Connectivity</a>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">AI Platform</div>
-        <a href="#">Predictive Scaling</a>
-        <a href="#">Threat Detection</a>
-        <a href="#">Smart Cooling</a>
-        <a href="#">Autonomous Ops</a>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Company</div>
-        <a href="#">About hxron</a>
-        <a href="#">Careers</a>
-        <a href="#">Partners</a>
-        <a href="#">Contact</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="footer-copy">© 2026 hxron. All rights reserved.</div>
-      <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Security</a>
-      </div>
-    </div>
-  </footer>
+<footer>
+    <strong>HXRON</strong><br><br>
+    AI • Datacenter • Cloud • Infrastructure
+    <br><br>
+    © 2026 HXRON. All rights reserved.
+</footer>
 
 </body>
 </html>
